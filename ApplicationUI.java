@@ -1,62 +1,63 @@
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Iterator;
 
 /**
- * Makes up the user interface (text based) of the application.
- * Responsible for all user interaction, like displaying the menu
- * and receiving input from the user.
- * 
- * @author asty
- * @version 1.0
+ * A text based user interface for the database.
+ * It has the following functions:
+ * -List all items in a specific database
+ * -Add new items to the database
+ * -Search for specific items in a database
+ *
+ * @author Arild Valderhaug & Arne Styve
+ * @version 0.1
  */
-public class ApplicationUI 
+public class ApplicationUI
 {
-
-   
-    // The menu tha will be displayed. Please edit/alter the menu
-    // to fit your application (i.e. replace "prodct" with "litterature"
-    // etc.
+    // instance variables - replace the example below with your own
     private String[] menuItems = {
-        "1. List all products",
-        "2. Add new product",
-        "3. Find a product by name",
+            "1. List all books",
+            "2. Add new book",
+            "3. Find a book",
     };
 
+    private Inventory books;
+
     /**
-     * Creates an instance of the ApplicationUI User interface. 
+     * Creates an instance of the applicationUI.
      */
-    public ApplicationUI() 
+    public ApplicationUI()
     {
+        this.books = new Inventory();
     }
 
     /**
      * Starts the application by showing the menu and retrieving input from the
      * user.
      */
-    public void start() 
+    public void start()
     {
-        this.init();
+        //this.init();
 
         boolean quit = false;
 
-        while (!quit) 
+        while (!quit)
         {
-            try 
+            try
             {
                 int menuSelection = this.showMenu();
-                switch (menuSelection) 
+                switch (menuSelection)
                 {
                     case 1:
-                        this.listAllProducts();
+                        this.listAllBooks();
                         break;
 
                     case 2:
-                        this.addNewProduct();
+                        this.addNewBook();
                         break;
 
                     case 3:
-                        this.findProductByName();
+                        this.findBookByName();
                         break;
 
                     case 4:
@@ -66,25 +67,25 @@ public class ApplicationUI
 
                     default:
                 }
-            } 
-            catch (InputMismatchException ime) 
+            }
+            catch (InputMismatchException ime)
             {
                 System.out.println("\nERROR: Please provide a number between 1 and " + this.menuItems.length + "..\n");
             }
-        }        
-        
+        }
+
     }
 
     /**
      * Displays the menu to the user, and waits for the users input. The user is
-     * expected to input an integer between 1 and the max number of menu items. 
-     * If the user inputs anything else, an InputMismatchException is thrown. 
+     * expected to input an integer between 1 and the max number of menu items.
+     * If the user inputs anything else, an InputMismatchException is thrown.
      * The method returns the valid input from the user.
      *
      * @return the menu number (between 1 and max menu item number) provided by the user.
      * @throws InputMismatchException if user enters an invalid number/menu choice
      */
-    private int showMenu() throws InputMismatchException 
+    private int showMenu() throws InputMismatchException
     {
         System.out.println("\n**** Application v0.1 ****\n");
         // Display the menu
@@ -99,62 +100,91 @@ public class ApplicationUI
         // Read input from user
         Scanner reader = new Scanner(System.in);
         int menuSelection = reader.nextInt();
-        if ((menuSelection < 1) || (menuSelection > maxMenuItemNumber)) 
+        if ((menuSelection < 1) || (menuSelection > maxMenuItemNumber))
         {
             throw new InputMismatchException();
         }
         return menuSelection;
     }
-    
+
     // ------ The methods below this line are "helper"-methods, used from the menu ----
-    // ------ All these methods are made privat, since they are only used by the menu ---
-    
+    // ------ All these methods are made private, since they are only used by the menu ---
+
     /**
-     * Initializes the application.
-     * Typically you would create the LiteratureRegistrer-instance here
+     * Lists all books in the collection
      */
-    private void init()
+    void listAllBooks()
     {
-        System.out.println("init() was called");
+        Iterator<Book> it = this.books.getIterator();
+        int i = 0;
+        while (it.hasNext())
+        {
+            Book b = it.next();
+            System.out.println("Title: " + b.getTitle() + ", "
+                    + "Author: " + b.getAuthor() + ", "
+                    + "Publisher: " + b.getPublisher() + ", "
+                    + "Edition: " + b.getEdition());
+            i++;
+        }
+
+        System.out.println("Total: " + i + " book(s).");
     }
 
     /**
-     * Lists all the products/literature in the register
+     * Add a new books to the collection.
+     * Creates a new instance of the book class, and adds the new object to the collection.
      */
-    void listAllProducts()
+    void addNewBook()
     {
-        System.out.println("listAllProducts() was called");
+        // Ask for book title
+        System.out.println("Please enter book title: ");
+        // Read input from user
+        Scanner reader = new Scanner(System.in);
+        String title = reader.nextLine();
+
+        // Ask for book author
+        System.out.println("Please enter book author: ");
+        // Read input from user
+        String author = reader.nextLine();
+
+        // Ask for publisher
+        System.out.println("Please enter book publisher: ");
+        // Read input from user
+        String publisher = reader.nextLine();
+
+        // Ask for edition number
+        System.out.println("Please enter edition number: ");
+        // Read input from user
+        int edition = reader.nextInt();
+
+        Book book = new Book(title, author, publisher, edition);
+        this.books.addBook(book);
+
+        System.out.println("Book added.");
     }
 
-    
     /**
-     * Add a new product/literature to the register.
-     * In this method you have to add code to ask the
-     * user for the necessary information you need to 
-     * create an instance of the product, which you
-     * then send as a parameter to the addNewspaper()-
-     * method of the register.
-     * Remember to also handle invalid input from the
-     * user!!
+     * Find and display a book based on title.
      */
-    void addNewProduct()
+    void findBookByName()
     {
-        System.out.println("addNewProduct() was called");
-        
-    }
+        // Ask for book title
+        System.out.println("Please enter book title: ");
+        // Read input from user
+        Scanner reader = new Scanner(System.in);
+        String title = reader.nextLine();
 
-    /**
-     * Find and display a product based om name (title).
-     * As with the addNewProduct()-method, you have to
-     * ask the user for the string (name/title/publisher)
-     * to search for, and then use this string as input-
-     * parameter to the method in the register-object.
-     * Then, upon return from the register, you need
-     * to print the details of the found item.
-     */
-    void findProductByName()
-    {
-        System.out.println("findProductByName() was called");
+        Book book = books.findBookByTitle(title);
+
+        if (book != null) {
+            System.out.println("Book found: ");
+            System.out.println("Title: " + book.getTitle() + ", "
+                    + "Author: " + book.getAuthor() + ", "
+                    + "Publisher: " + book.getPublisher() + ", "
+                    + "Edition: " + book.getEdition());
+        }
+        else {
+            System.out.println("Book not found.");
+        }
     }
-    
 }

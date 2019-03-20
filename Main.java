@@ -1,20 +1,18 @@
-
 /**
- * The Main-class of the application. This class only holds the main()-method
- * to start the application.
- * 
- * @author asty
+ * The main class of the application.
+ * It's purpose is to initialize the application
+ *
+ * @author Arild Valderhaug
  * @version 1.0
  */
-public class Main 
+public class Main
 {
     /**
-     * The main entry for the application.
-     * @param args arguments provided during startup of the application
+     *
      */
     public static void main(String[] args)
     {
-        ApplicationUI appUI = new ApplicationUI();
-        appUI.start();
+        ApplicationUI applicationUI = new ApplicationUI();
+        applicationUI.start();
     }
 }
